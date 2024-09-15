@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+button, input:where([type='button']), input:where([type='reset']), input:where([type='submit']) {
+    -webkit-appearance: none; /* Menghapus tampilan default button di browser */
+    appearance: none; /* Ini berlaku juga untuk browser non-Webkit */
+    background-color: blue; /* Menghapus background bawaan */
+    padding: 0 0.3rem;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
