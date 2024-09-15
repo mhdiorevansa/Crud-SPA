@@ -21,8 +21,8 @@ export function getBarang() {
       ],
       dom:
          "<'flex justify-between items-center mb-4'<'flex items-center'l><'flex items-center'f>>" + // Length and search box
-         "<'overflow-x-auto text-gray-400 text-center tracking-wider text-sm font-medium'<'table-responsive'tr>>" +  // Table content
-         "<'flex justify-between items-center mt-4'<'flex items-center me-5'i><'flex items-center'p>>", // Info and pagination
+         "<'overflow-x-auto text-gray-400 text-left tracking-wider text-sm font-medium'<'table-responsive'tr>>" +  // Table content
+         "<'flex justify-between items-center mt-5'<'flex items-center me-5'i><'flex items-center'p>>", // Info and pagination
       language: {
          search: "",
          searchPlaceholder: "Search...",

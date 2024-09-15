@@ -2,12 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-button, input:where([type='button']), input:where([type='reset']), input:where([type='submit']) {
+.dt-paging button, input:where([type='button']), .dt-paging input:where([type='reset']), .dt-paging input:where([type='submit']) {
     -webkit-appearance: none; /* Menghapus tampilan default button di browser */
     appearance: none; /* Ini berlaku juga untuk browser non-Webkit */
-    background-color: blue; /* Menghapus background bawaan */
-    padding: 0 0.3rem;
+    padding: 0 0.4rem;
     color: white;
     border: none;
     border-radius: 5px;
+    color: #3F83F8;
+}
+.dt-paging button.dt-paging-button.current{
+    color: white;
+    background-color: #3F83F8;
+}
+table tbody tr td.sorting_1, table tbody tr td.dt-type-numeric{
+    padding-inline-start: 1rem
 }

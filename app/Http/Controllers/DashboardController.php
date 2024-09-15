@@ -17,7 +17,8 @@ class DashboardController extends Controller
 
     public function getBarang()
     {
-        $data = Barang::select(['id','nama_barang','harga_barang']);
+        $data = Barang::select(['id','nama_barang','harga_barang'])
+        ->orderBy('id');
         return DataTables::of($data)
         ->make(true);
     }

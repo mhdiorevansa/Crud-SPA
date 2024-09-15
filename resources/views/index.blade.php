@@ -43,8 +43,8 @@
 					<table class="min-w-full table-auto divide-y divide-gray-200" id="table-barang" data-get-barang-url="{{ url('item') }}">
 						<thead class="bg-slate-100">
 							<tr>
-								<th class="py-3 text-center text-md font-medium uppercase tracking-wider text-gray-400">Nama Barang</th>
-								<th class="py-3 text-center text-md font-medium uppercase tracking-wider text-gray-400">Harga Barang</th>
+								<th class="py-3 text-left ps-4 text-md font-medium uppercase tracking-wider text-gray-400">Nama Barang</th>
+								<th class="py-3 text-left ps-4 text-md font-medium uppercase tracking-wider text-gray-400">Harga Barang</th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-gray-200 bg-white">
