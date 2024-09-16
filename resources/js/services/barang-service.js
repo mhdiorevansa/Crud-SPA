@@ -2,21 +2,31 @@ import Swal from "sweetalert2";
 import $ from "jquery";
 import 'datatables.net';
 
+let tableBarang;
 const urlGetBarang = $('#table-barang').data('get-barang-url');
 export function getBarang() {
-   $('#table-barang').DataTable({
+   tableBarang = $('#table-barang').DataTable({
+      "lengthMenu": [10, 15, 20],
+      "pageLength": 10,
+      "searching": true,
       responsive: true,
       processing: true,
       serverSide: true,
       ajax: urlGetBarang,
       columns: [
-         { 
-            data: 'nama_barang',
-            name: 'nama_barang' 
+         {
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false
          },
-         { 
-            data: 'harga_barang', 
-            name: 'harga_barang' 
+         {
+            data: 'nama_barang',
+            name: 'nama_barang'
+         },
+         {
+            data: 'harga_barang',
+            name: 'harga_barang'
          },
       ],
       dom:
@@ -40,9 +50,21 @@ export function getBarang() {
          // pagination
          $('.dt-info').addClass('text-gray-400 text-xs');
          $('.dt-paging nav').addClass('inline-flex space-x-1');
-
       },
+      "initComplete": function (settings, json) {
+         $('[data-kt-menu]').each(function () {
+            var menu = new KTMenu(this);
+         });
+      },
+      columnDefs: [{
+         responsivePriority: 1,
+         targets: [0, -1]
+      }],
    });
+}
+
+function reloadTableBarang() {
+   tableBarang.ajax.reload(null, false);
 }
 
 const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
@@ -68,11 +90,12 @@ export function addBarang() {
          dataType: "json",
          success: function (response) {
             if (response.status == "success") {
+               reloadTableBarang();
                const Toast = Swal.mixin({
                   toast: true,
                   position: "top-end",
                   showConfirmButton: false,
-                  timer: 2000,
+                  timer: 1000,
                   timerProgressBar: true,
                   didOpen: (toast) => {
                      toast.onmouseenter = Swal.stopTimer;
@@ -92,13 +115,13 @@ export function addBarang() {
                   $("#error-nama-barang").html("");
                   $("#error-harga-barang").html("");
                   $("#add-barang")[0].reset();
-               }, 2000);
+               }, 1000);
             } else {
                const Toast = Swal.mixin({
                   toast: true,
                   position: "top-end",
                   showConfirmButton: false,
-                  timer: 2000,
+                  timer: 1000,
                   timerProgressBar: true,
                   didOpen: (toast) => {
                      toast.onmouseenter = Swal.stopTimer;

@@ -2,19 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-.dt-paging button, input:where([type='button']), .dt-paging input:where([type='reset']), .dt-paging input:where([type='submit']) {
+.dt-paging button,
+input:where([type="button"]),
+.dt-paging input:where([type="reset"]),
+.dt-paging input:where([type="submit"]) {
     -webkit-appearance: none; /* Menghapus tampilan default button di browser */
     appearance: none; /* Ini berlaku juga untuk browser non-Webkit */
     padding: 0 0.4rem;
     color: white;
     border: none;
     border-radius: 5px;
-    color: #3F83F8;
+    color: #3f83f8;
 }
-.dt-paging button.dt-paging-button.current{
+.dt-paging button.dt-paging-button.current {
     color: white;
-    background-color: #3F83F8;
+    background-color: #3f83f8;
 }
-table tbody tr td.sorting_1, table tbody tr td.dt-type-numeric{
-    padding-inline-start: 1rem
+table tbody tr td.sorting_1,
+table tbody tr td.dt-type-numeric,
+table tbody tr td {
+    padding-inline-start: 1rem;
+}
+::-webkit-scrollbar {
+    width: 7px;
+}
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #3f83f8;
+    border-radius: 10px;
 }

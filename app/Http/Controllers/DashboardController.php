@@ -17,12 +17,14 @@ class DashboardController extends Controller
 
     public function getBarang()
     {
-        $data = Barang::select(['id','nama_barang','harga_barang'])
-        ->orderBy('id');
+        $data = Barang::select(['id', 'nama_barang', 'harga_barang', 'created_at'])
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'asc');
         return DataTables::of($data)
-        ->make(true);
+            ->addIndexColumn()
+            ->make(true);
     }
-    
+
     public function postBarang(Request $request)
     {
         $messages = [
