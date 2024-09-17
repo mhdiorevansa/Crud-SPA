@@ -25,6 +25,7 @@ table tbody tr td {
 }
 ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 ::-webkit-scrollbar-track {
     border-radius: 10px;

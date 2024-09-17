@@ -57,11 +57,6 @@ export function getBarang() {
          $('.dt-info').addClass('text-[#353935] text-xs');
          $('.dt-paging nav').addClass('inline-flex');
       },
-      "initComplete": function (settings, json) {
-         $('[data-kt-menu]').each(function () {
-            var menu = new KTMenu(this);
-         });
-      },
       columnDefs: [{
          responsivePriority: 1,
          targets: [0, -1]
@@ -77,12 +72,13 @@ const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
 export function addBarang() {
    $("#add-barang").on("submit", function (event) {
       event.preventDefault();
-      $("#submit-data-barang").html("Menyimpan Data...").attr("disabled", "disabled");
+      $("#submit-data-barang").html('<i class="fa-solid fa-spinner animate-spin me-1"></i>Menyimpan Data...').attr("disabled", "disabled");
       $("#add-nama-barang").removeClass("is-invalid");
       $("#add-harga-barang").removeClass("is-invalid");
       $("#error-nama-barang").html('');
       $("#error-harga-barang").html('');
       let formData = new FormData(this);
+      formData.append('harga_barang', $("#add-harga-barang").val().replace(/\D/g, ''));
       $.ajax({
          headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
