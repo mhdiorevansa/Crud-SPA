@@ -12,7 +12,7 @@ input:where([type="button"]),
     color: white;
     border: none;
     border-radius: 5px;
-    color: #3f83f8;
+    color: #353935;
 }
 .dt-paging button.dt-paging-button.current {
     color: white;
@@ -21,10 +21,10 @@ input:where([type="button"]),
 table tbody tr td.sorting_1,
 table tbody tr td.dt-type-numeric,
 table tbody tr td {
-    padding-inline-start: 1rem;
+    padding-inline-start: 0.75rem;
 }
 ::-webkit-scrollbar {
-    width: 7px;
+    width: 6px;
 }
 ::-webkit-scrollbar-track {
     border-radius: 10px;

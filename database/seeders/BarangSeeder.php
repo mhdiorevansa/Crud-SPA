@@ -18,6 +18,6 @@ class BarangSeeder extends Seeder
         Barang::truncate();
         Schema::enableForeignKeyConstraints();
 
-        Barang::factory()->count(5000)->create();
+        Barang::factory()->count(50000)->create();
     }
 }

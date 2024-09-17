@@ -15,8 +15,8 @@
     },
     "dependencies": {
         "datatables.net": "^2.1.6",
-        "flowbite": "^2.5.1",
         "jquery": "^3.7.1",
+        "jquery-mask-plugin": "^1.14.16",
         "simple-datatables": "^9.1.0",
         "sweetalert2": "^11.14.0"
     }

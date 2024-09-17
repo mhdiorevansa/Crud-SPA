@@ -1,6 +1,9 @@
 import Swal from "sweetalert2";
 import $ from "jquery";
 import 'datatables.net';
+import 'jquery-mask-plugin';
+
+$('#add-harga-barang').mask('000.000.000', { reverse: true });
 
 let tableBarang;
 const urlGetBarang = $('#table-barang').data('get-barang-url');
@@ -26,12 +29,15 @@ export function getBarang() {
          },
          {
             data: 'harga_barang',
-            name: 'harga_barang'
+            name: 'harga_barang',
+            render: function (val, type, row) {
+               return 'Rp. ' + val.toLocaleString('id-ID');
+            }
          },
       ],
       dom:
          "<'flex justify-between items-center mb-4'<'flex items-center'l><'flex items-center'f>>" + // Length and search box
-         "<'overflow-x-auto text-gray-400 text-left tracking-wider text-sm font-medium'<'table-responsive'tr>>" +  // Table content
+         "<'overflow-x-auto text-left tracking-wider font-medium'<'table-responsive'tr>>" +  // Table content
          "<'flex justify-between items-center mt-5'<'flex items-center me-5'i><'flex items-center'p>>", // Info and pagination
       language: {
          search: "",
@@ -39,17 +45,17 @@ export function getBarang() {
       },
       drawCallback: function () {
          // input search
-         $('input[type="search"]').addClass('block w-full p-1 placeholder:text-sm placeholder:ps-2 placeholder:text-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent');
-         $('.dt-length select').addClass('flex p-1 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent');
+         $('input[type="search"]').addClass('block w-full p-1 placeholder:text-sm placeholder:ps-1 placeholder:text-[#353935] border border-[#353935] rounded-md shadow-sm focus:outline-0');
 
          // page entries
+         $('.dt-length select').addClass('flex p-1 border border-[#353935] rounded-md shadow-sm focus:border-[#353935] focus:outline-0');
          $('.dt-length').addClass('flex items-center gap-2');
-         $('.dt-input').addClass('text-sm text-gray-400 ps-2');
-         $('.dt-length label').addClass('mr-0 text-gray-400');
+         $('.dt-input').addClass('text-sm text-[#353935]');
+         $('.dt-length label').addClass('mr-0 text-[#353935]');
 
          // pagination
-         $('.dt-info').addClass('text-gray-400 text-xs');
-         $('.dt-paging nav').addClass('inline-flex space-x-1');
+         $('.dt-info').addClass('text-[#353935] text-xs');
+         $('.dt-paging nav').addClass('inline-flex');
       },
       "initComplete": function (settings, json) {
          $('[data-kt-menu]').each(function () {
@@ -71,11 +77,11 @@ const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
 export function addBarang() {
    $("#add-barang").on("submit", function (event) {
       event.preventDefault();
-      $("#submit-data-barang")
-         .html("Menyimpan Data...")
-         .attr("disabled", "disabled");
+      $("#submit-data-barang").html("Menyimpan Data...").attr("disabled", "disabled");
       $("#add-nama-barang").removeClass("is-invalid");
       $("#add-harga-barang").removeClass("is-invalid");
+      $("#error-nama-barang").html('');
+      $("#error-harga-barang").html('');
       let formData = new FormData(this);
       $.ajax({
          headers: {
@@ -95,7 +101,7 @@ export function addBarang() {
                   toast: true,
                   position: "top-end",
                   showConfirmButton: false,
-                  timer: 1000,
+                  timer: 1500,
                   timerProgressBar: true,
                   didOpen: (toast) => {
                      toast.onmouseenter = Swal.stopTimer;
@@ -115,13 +121,13 @@ export function addBarang() {
                   $("#error-nama-barang").html("");
                   $("#error-harga-barang").html("");
                   $("#add-barang")[0].reset();
-               }, 1000);
+               }, 1500);
             } else {
                const Toast = Swal.mixin({
                   toast: true,
                   position: "top-end",
                   showConfirmButton: false,
-                  timer: 1000,
+                  timer: 1500,
                   timerProgressBar: true,
                   didOpen: (toast) => {
                      toast.onmouseenter = Swal.stopTimer;

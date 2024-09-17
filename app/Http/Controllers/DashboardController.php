@@ -29,11 +29,12 @@ class DashboardController extends Controller
     {
         $messages = [
             'nama_barang.required' => 'nama barang wajib diisi',
-            'harga_barang.required' => 'harga barang wajib diisi'
+            'harga_barang.required' => 'harga barang wajib diisi',
+            'harga_barang.max' => 'harga barang maksimal :max digit'
         ];
         $request->validate([
             'nama_barang' => 'required',
-            'harga_barang' => 'required'
+            'harga_barang' => 'required|max:10'
         ], $messages);
         $data = $request->all();
         try {
