@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #3f83f8;
+  --secondary: transparent;
+}
+
+*,
+*:hover{
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--secondary);
+}
+
 .dt-paging button,
 input:where([type="button"]),
 .dt-paging input:where([type="reset"]),
@@ -14,24 +25,14 @@ input:where([type="button"]),
     border-radius: 5px;
     color: #353935;
 }
+
 .dt-paging button.dt-paging-button.current {
     color: white;
     background-color: #3f83f8;
 }
+
 table tbody tr td.sorting_1,
 table tbody tr td.dt-type-numeric,
 table tbody tr td {
     padding-inline-start: 0.75rem;
-}
-
-::-webkit-scrollbar {
-    width: 6px !important;
-    height: 6px !important;
-}
-::-webkit-scrollbar-track {
-    border-radius: 10px !important;
-}
-::-webkit-scrollbar-thumb {
-    background: #3f83f8 !important;
-    border-radius: 10px !important;
 }

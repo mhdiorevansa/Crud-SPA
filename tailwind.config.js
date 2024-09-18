@@ -8,6 +8,11 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  daisyui: {
+    themes: [],
+  },
+  plugins: [
+    require('daisyui'),
+    require('tailwind-scrollbar'),
+  ],
 }
-
