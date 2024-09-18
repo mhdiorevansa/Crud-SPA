@@ -48,6 +48,7 @@
 								<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">No</th>
 								<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">Nama Barang</th>
 								<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">Harga Barang</th>
+								<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">Aksi</th>
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-gray-300 bg-white">

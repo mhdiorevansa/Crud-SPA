@@ -6,8 +6,8 @@
 input:where([type="button"]),
 .dt-paging input:where([type="reset"]),
 .dt-paging input:where([type="submit"]) {
-    -webkit-appearance: none; /* Menghapus tampilan default button di browser */
-    appearance: none; /* Ini berlaku juga untuk browser non-Webkit */
+    -webkit-appearance: none;
+    appearance: none;
     padding: 0 0.4rem;
     color: white;
     border: none;
@@ -24,13 +24,13 @@ table tbody tr td {
     padding-inline-start: 0.75rem;
 }
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 6px !important;
+    height: 6px !important;
 }
 ::-webkit-scrollbar-track {
-    border-radius: 10px;
+    border-radius: 10px !important;
 }
 ::-webkit-scrollbar-thumb {
-    background: #3f83f8;
-    border-radius: 10px;
+    background: #3f83f8 !important;
+    border-radius: 10px !important;
 }

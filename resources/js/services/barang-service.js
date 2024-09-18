@@ -12,7 +12,7 @@ export function getBarang() {
       "lengthMenu": [10, 15, 20],
       "pageLength": 10,
       "searching": true,
-      responsive: true,
+      responsive: false,
       processing: true,
       serverSide: true,
       ajax: urlGetBarang,
@@ -25,7 +25,10 @@ export function getBarang() {
          },
          {
             data: 'nama_barang',
-            name: 'nama_barang'
+            name: 'nama_barang',
+            render: function (val, type, row) {
+               return `<span title="${val}">${val.length > 15 ? val.substring(0, 15) + '...' : val}</span>`;
+            }
          },
          {
             data: 'harga_barang',
@@ -34,6 +37,20 @@ export function getBarang() {
                return 'Rp. ' + val.toLocaleString('id-ID');
             }
          },
+         {
+            "orderable": false,
+            "searchable": false,
+            "data": null,
+            render: function (data, type, row, meta) {
+               return `<div class="dropdown dropdown-left">
+                  <div tabindex="0" class="cursor-pointer"><i class="fa-solid fa-ellipsis"></i></div>
+                  <ul tabindex="0" class="dropdown-content menu bg-white rounded-md z-[1] w-32 shadow-md">
+                     <li class="py-0"><a><i class="fa-regular fa-pen-to-square"></i>Edit</a></li>
+                     <li class="py-0"><a><i class="fa-regular fa-trash-can"></i>Hapus</a></li>
+                  </ul>
+               </div>`;
+            }
+         }
       ],
       dom:
          "<'flex justify-between items-center mb-4'<'flex items-center'l><'flex items-center'f>>" + // Length and search box
