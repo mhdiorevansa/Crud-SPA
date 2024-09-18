@@ -23,6 +23,7 @@ table tbody tr td.dt-type-numeric,
 table tbody tr td {
     padding-inline-start: 0.75rem;
 }
+
 ::-webkit-scrollbar {
     width: 6px !important;
     height: 6px !important;
