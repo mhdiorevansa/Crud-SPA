@@ -43,7 +43,7 @@
 				<div class="my-7">
 					<table class="min-w-full divide-y divide-gray-300 text-[#353935]" id="table-barang"
 						data-get-barang-url="{{ url('item') }}">
-						<thead>
+						<thead class="bg-slate-100">
 							<tr>
 								<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">No</th>
 								<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">Nama Barang</th>

@@ -46,13 +46,11 @@ export function getBarang() {
       drawCallback: function () {
          // input search
          $('input[type="search"]').addClass('block w-full p-1 placeholder:text-sm placeholder:ps-1 placeholder:text-[#353935] border border-[#353935] rounded-md shadow-sm focus:outline-0');
-
          // page entries
          $('.dt-length select').addClass('flex p-1 border border-[#353935] rounded-md shadow-sm focus:border-[#353935] focus:outline-0');
          $('.dt-length').addClass('flex items-center gap-2');
          $('.dt-input').addClass('text-sm text-[#353935]');
          $('.dt-length label').addClass('mr-0 text-[#353935]');
-
          // pagination
          $('.dt-info').addClass('text-[#353935] text-xs');
          $('.dt-paging nav').addClass('inline-flex');
@@ -64,8 +62,28 @@ export function getBarang() {
    });
 }
 
-function reloadTableBarang() {
-   tableBarang.ajax.reload(null, false);
+function reloadHighlightTable() {
+   tableBarang.ajax.reload(function () {
+      let data = tableBarang.rows().data();
+      let maxId = -1;
+      let rowIndexWithMaxId = -1;
+      data.each(function (value, index) {
+         if (value.id > maxId) {
+            maxId = value.id;
+            rowIndexWithMaxId = index;
+         }
+      });
+      if (rowIndexWithMaxId !== -1) {
+         let rowNode = tableBarang.row(rowIndexWithMaxId).node();
+         $(rowNode).addClass('transition duration-500 ease-in-out bg-blue-500 text-white opacity-100');
+         setTimeout(function () {
+            $(rowNode).addClass('opacity-0');
+            setTimeout(function () {
+               $(rowNode).removeClass('bg-blue-500 text-white opacity-0');
+            }, 500);
+         }, 2000);
+      }
+   }, false);
 }
 
 const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
@@ -92,7 +110,7 @@ export function addBarang() {
          dataType: "json",
          success: function (response) {
             if (response.status == "success") {
-               reloadTableBarang();
+               reloadHighlightTable();
                const Toast = Swal.mixin({
                   toast: true,
                   position: "top-end",
@@ -107,17 +125,8 @@ export function addBarang() {
                Toast.fire({
                   icon: "success",
                   title: response.message,
-               }).then((result) => {
-                  if (result.isConfirmed) {
-                     Swal.close();
-                  }
                });
-               setTimeout(function () {
-                  Swal.close();
-                  $("#error-nama-barang").html("");
-                  $("#error-harga-barang").html("");
-                  $("#add-barang")[0].reset();
-               }, 1500);
+               $("#add-barang")[0].reset();
             } else {
                const Toast = Swal.mixin({
                   toast: true,
