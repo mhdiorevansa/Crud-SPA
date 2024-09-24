@@ -9,6 +9,7 @@
 		<meta name="keywords" content="html, css, javascript, laravel, mysql, crud, spa, belajar">
 		<meta name="author" content="Muhammad Dio Revansa">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
+		<link type="image/x-icon" href="{{ asset('storage/img/laravel.svg') }}" rel="icon" />
 		<title>{{ config('app.name') }} | {{ $web['title'] }}</title>
 		<link href="https://fonts.bunny.net" rel="preconnect">
 		<link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />

@@ -2,15 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #3f83f8;
-  --secondary: transparent;
-}
-
 *,
 *:hover{
   scrollbar-width: thin;
-  scrollbar-color: var(--primary) var(--secondary);
+  scrollbar-color: #3f83f8 transparent;
 }
 
 .dt-paging button,

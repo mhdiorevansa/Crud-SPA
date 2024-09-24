@@ -42,7 +42,13 @@ export function getBarang() {
             "searchable": false,
             "data": null,
             render: function (data, type, row, meta) {
-               return `test`;
+               return `<div class="dropdown dropdown-left dropdown-end">
+                        <div tabindex="0" role="button" class="btn border-0 p-0"><i class="fa-solid fa-ellipsis"></i></div>
+                        <ul tabindex="0" class="dropdown-content menu bg-white rounded-box z-[1] w-32 me-2 p-0 shadow">
+                           <li><a>Edit</a></li>
+                           <li><a>Hapus</a></li>
+                        </ul>
+                     </div>`;
             }
          }
       ],
