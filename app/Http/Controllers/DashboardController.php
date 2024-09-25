@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -20,9 +21,13 @@ class DashboardController extends Controller
         $data = Barang::select(['id', 'nama_barang', 'harga_barang', 'created_at'])
             ->orderBy('created_at', 'desc')
             ->orderBy('id', 'asc');
-        return DataTables::of($data)
+        $datatable = DataTables::eloquent($data)
+            ->editColumn('id', function ($data) {
+                return Crypt::encryptString($data->id);
+            })
             ->addIndexColumn()
             ->make(true);
+        return $datatable;
     }
 
     public function postBarang(Request $request)
@@ -48,6 +53,26 @@ class DashboardController extends Controller
             $response['status'] = 'error';
             $response['message'] = 'Gagal menambahkan data barang';
             $response['error'] = $th->getMessage();
+        }
+        return response()->json($response);
+    }
+
+    public function editBarang($id)
+    {
+        try {
+            $dcryptId = Crypt::decryptString($id);
+            $data = Barang::select('nama_barang', 'harga_barang')->where('barang.id', $dcryptId)->firstOrFail();
+            Crypt::encryptString($dcryptId);
+            $response = [
+                'status' => 'success',
+                'message' => 'barang loaded successfully',
+                'data' => $data
+            ];
+        } catch (\Throwable $th) {
+            $response = [
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ];
         }
         return response()->json($response);
     }

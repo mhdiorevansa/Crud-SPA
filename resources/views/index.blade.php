@@ -42,7 +42,7 @@
 					</div>
 				</form>
 				<div class="my-7">
-					<table class="min-w-full divide-y divide-gray-300 text-[#353935]" id="table-barang"
+					<table class="min-w-full divide-gray-300 overflow-hidden text-[#353935]" id="table-barang"
 						data-get-barang-url="{{ url('item') }}">
 						<thead class="bg-slate-100">
 							<tr>
@@ -53,9 +53,34 @@
 							</tr>
 						</thead>
 						<tbody class="divide-y divide-gray-300 bg-white">
-							<!-- Isi Data Table -->
+							<!-- Data Table -->
 						</tbody>
 					</table>
+					{{-- modal edit barang --}}
+					<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('item-edit') }}">
+						<div class="modal-box bg-white">
+							<button class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2" id="close_modal">✕</button>
+							<h3 class="text-lg font-bold">Edit Barang</h3>
+							<div class="modal-action mt-4">
+								<form class="align-items-center flex w-full flex-col gap-y-4">
+									@csrf
+									<input id="id_edit" name="id" type="hidden">
+									<input
+										class="text-md rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none"
+										id="nama-barang-edit" name="nama_barang" type="text" placeholder="masukkan nama barang">
+									<input
+										class="text-md rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none"
+										id="harga-barang-edit" name="harga_barang" type="text" placeholder="masukkan harga barang">
+									<button class="btn w-20 self-end border-0 bg-blue-500 text-white hover:bg-blue-500 hover:text-white">
+										<div class="flex gap-x-2">
+											<i class="fa-regular fa-pen-to-square"></i>
+											<span>Edit</span>
+										</div>
+									</button>
+								</form>
+							</div>
+						</div>
+					</dialog>
 				</div>
 			</div>
 		</div>

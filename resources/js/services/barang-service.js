@@ -5,12 +5,80 @@ import 'jquery-mask-plugin';
 
 $('#add-harga-barang').mask('000.000.000', { reverse: true });
 
+function reloadHighlightTable() {
+   tableBarang.ajax.reload(function () {
+      let data = tableBarang.rows().data();
+      let maxId = -1;
+      let rowIndexWithMaxId = -1;
+      data.each(function (value, index) {
+         if (value.id > maxId) {
+            maxId = value.id;
+            rowIndexWithMaxId = index;
+         }
+      });
+      if (rowIndexWithMaxId !== -1) {
+         let rowNode = tableBarang.row(rowIndexWithMaxId).node();
+         $(rowNode).addClass('transition duration-500 ease-in-out bg-blue-500 text-white opacity-100');
+         setTimeout(function () {
+            $(rowNode).addClass('opacity-0');
+            setTimeout(function () {
+               $(rowNode).removeClass('bg-blue-500 text-white opacity-0');
+            }, 500);
+         }, 2000);
+      }
+   }, false);
+}
+
+function editDataBarang(id) {
+   const urlEditBarang = $('#edit_modal').data('edit-barang-url') + '/' + id;
+   $('#edit_modal').addClass('modal-open');
+   $('#close_modal').on('click', function () {
+      $('#edit_modal').removeClass('modal-open');
+   });
+   $.ajax({
+      headers: {
+         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      type: 'GET',
+      url: urlEditBarang,
+      dataType: 'json',
+      success: function (response) {
+         if (response.status == 'success') {
+            let data = response.data;
+            $('#id_edit').val(id);
+            $('#nama-barang-edit').val(data.nama_barang);
+            $('#harga-barang-edit').val(data.harga_barang);
+         } else {
+            const Toast = Swal.mixin({
+               toast: true,
+               position: "top-end",
+               showConfirmButton: false,
+               timer: 1500,
+               timerProgressBar: true,
+               didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+               },
+            });
+            Toast.fire({
+               icon: "error",
+               title: response.message,
+            });
+         }
+      },
+      error: function (response) {
+         errorAjaxResponse(response);
+      }
+   })
+}
+window.editDataBarang = editDataBarang;
+
 let tableBarang;
-const urlGetBarang = $('#table-barang').data('get-barang-url');
 export function getBarang() {
+   const urlGetBarang = $('#table-barang').data('get-barang-url');
    tableBarang = $('#table-barang').DataTable({
-      "lengthMenu": [10, 15, 20],
-      "pageLength": 10,
+      "lengthMenu": [7, 15, 20],
+      "pageLength": 7,
       "searching": true,
       responsive: false,
       processing: true,
@@ -44,9 +112,9 @@ export function getBarang() {
             render: function (data, type, row, meta) {
                return `<div class="dropdown dropdown-left dropdown-end">
                         <div tabindex="0" role="button" class="btn border-0 p-0"><i class="fa-solid fa-ellipsis"></i></div>
-                        <ul tabindex="0" class="dropdown-content menu bg-white rounded-box z-[1] w-32 me-2 p-0 shadow">
-                           <li><a>Edit</a></li>
-                           <li><a>Hapus</a></li>
+                        <ul tabindex="0" class="dropdown-content menu bg-white rounded-box z-[1] w-32 me-2 p-0 shadow-md">
+                           <li><a href="javascript:void(0)" onclick="editDataBarang('${row.id}')"><i class="fa-regular fa-pen-to-square"></i>Edit</a></li>
+                           <li><a><i class="fa-regular fa-trash-can"></i>Hapus</a></li>
                         </ul>
                      </div>`;
             }
@@ -79,32 +147,8 @@ export function getBarang() {
    });
 }
 
-function reloadHighlightTable() {
-   tableBarang.ajax.reload(function () {
-      let data = tableBarang.rows().data();
-      let maxId = -1;
-      let rowIndexWithMaxId = -1;
-      data.each(function (value, index) {
-         if (value.id > maxId) {
-            maxId = value.id;
-            rowIndexWithMaxId = index;
-         }
-      });
-      if (rowIndexWithMaxId !== -1) {
-         let rowNode = tableBarang.row(rowIndexWithMaxId).node();
-         $(rowNode).addClass('transition duration-500 ease-in-out bg-blue-500 text-white opacity-100');
-         setTimeout(function () {
-            $(rowNode).addClass('opacity-0');
-            setTimeout(function () {
-               $(rowNode).removeClass('bg-blue-500 text-white opacity-0');
-            }, 500);
-         }, 2000);
-      }
-   }, false);
-}
-
-const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
 export function addBarang() {
+   const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
    $("#add-barang").on("submit", function (event) {
       event.preventDefault();
       $("#submit-data-barang").html('<i class="fa-solid fa-spinner animate-spin me-1"></i>Menyimpan Data...').attr("disabled", "disabled");
