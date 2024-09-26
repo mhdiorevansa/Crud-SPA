@@ -46,13 +46,17 @@ class DashboardController extends Controller
             DB::beginTransaction();
             Barang::create($data);
             DB::commit();
-            $response['status'] = 'success';
-            $response['message'] = 'Sukses menambahkan data barang';
+            $response = [
+                'status' => 'success',
+                'message' => 'Sukses menambahkan data barang'
+            ];
         } catch (\Throwable $th) {
             DB::rollBack();
-            $response['status'] = 'error';
-            $response['message'] = 'Gagal menambahkan data barang';
-            $response['error'] = $th->getMessage();
+            $response = [
+                'status' => 'error',
+                'message' => 'Gagal menambahkan data barang',
+                'error' => $th->getMessage(),
+            ];
         }
         return response()->json($response);
     }
@@ -61,8 +65,7 @@ class DashboardController extends Controller
     {
         try {
             $dcryptId = Crypt::decryptString($id);
-            $data = Barang::select('nama_barang', 'harga_barang')->where('barang.id', $dcryptId)->firstOrFail();
-            Crypt::encryptString($dcryptId);
+            $data = Barang::select('nama_barang', 'harga_barang')->where('id', $dcryptId)->firstOrFail();
             $response = [
                 'status' => 'success',
                 'message' => 'barang loaded successfully',
@@ -71,7 +74,49 @@ class DashboardController extends Controller
         } catch (\Throwable $th) {
             $response = [
                 'status' => 'error',
-                'message' => $th->getMessage()
+                'message' => 'Sepertinya ada masalah',
+                'error' => $th->getMessage()
+            ];
+        }
+        return response()->json($response);
+    }
+
+    public function updateBarang($id, Request $request)
+    {
+        $messages = [
+            'nama_barang.required' => 'nama barang wajib diisi',
+            'harga_barang.required' => 'harga barang wajib diisi',
+            'harga_barang.max' => 'harga barang maksimal :max digit'
+        ];
+        $request->validate([
+            'nama_barang' => 'required',
+            'harga_barang' => 'required|max:10'
+        ], $messages);
+        try {
+            $id = Crypt::decryptString($id);
+            $data = Barang::findOrFail($id);
+        } catch (\Throwable $th) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ];
+        }
+        $dataToUpdate = $request->except('id');
+        $dataToUpdate['harga_barang'] = str_replace(['.', ','], '', $request->input('harga_barang', 0));
+        try {
+            DB::beginTransaction();
+            $data->update($dataToUpdate);
+            DB::commit();
+            $response = [
+                'status' => 'success',
+                'message' => 'Data berhasil di update'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $response = [
+                'status' => 'error',
+                'message' => 'Sepertinya ada masalah',
+                'error' => $th->getMessage()
             ];
         }
         return response()->json($response);

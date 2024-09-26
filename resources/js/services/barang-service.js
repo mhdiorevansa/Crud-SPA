@@ -3,7 +3,7 @@ import $ from "jquery";
 import 'datatables.net';
 import 'jquery-mask-plugin';
 
-$('#add-harga-barang').mask('000.000.000', { reverse: true });
+$('#add-harga-barang, #harga-barang-edit').mask('000.000.000', { reverse: true });
 
 function reloadHighlightTable() {
    tableBarang.ajax.reload(function () {
@@ -32,9 +32,8 @@ function reloadHighlightTable() {
 function editDataBarang(id) {
    const urlEditBarang = $('#edit_modal').data('edit-barang-url') + '/' + id;
    $('#edit_modal').addClass('modal-open');
-   $('#close_modal').on('click', function () {
-      $('#edit_modal').removeClass('modal-open');
-   });
+   $('#loader').show();
+   $('#modal_content').hide();
    $.ajax({
       headers: {
          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -44,32 +43,36 @@ function editDataBarang(id) {
       dataType: 'json',
       success: function (response) {
          if (response.status == 'success') {
+            console.log(response.message);
             let data = response.data;
-            $('#id_edit').val(id);
+            $('#id-edit').val(id);
             $('#nama-barang-edit').val(data.nama_barang);
             $('#harga-barang-edit').val(data.harga_barang);
+            $('#loader').hide();
+            $('#modal_content').show();
          } else {
-            const Toast = Swal.mixin({
+            Swal.fire({
+               icon: "error",
+               title: response.message,
                toast: true,
                position: "top-end",
                showConfirmButton: false,
                timer: 1500,
                timerProgressBar: true,
-               didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
-               },
-            });
-            Toast.fire({
-               icon: "error",
-               title: response.message,
             });
          }
       },
       error: function (response) {
+         $('#loader').hide();
          errorAjaxResponse(response);
       }
-   })
+   });
+   $('#close_modal').on('click', function () {
+      $('#edit_modal').removeClass('modal-open');
+      $('#id-edit').val('');
+      $('#nama-barang-edit').val('');
+      $('#harga-barang-edit').val('');
+   });
 }
 window.editDataBarang = editDataBarang;
 
@@ -102,7 +105,7 @@ export function getBarang() {
             data: 'harga_barang',
             name: 'harga_barang',
             render: function (val, type, row) {
-               return 'Rp. ' + val.toLocaleString('id-ID');
+               return val;
             }
          },
          {
@@ -236,4 +239,88 @@ export function addBarang() {
          },
       });
    });
+}
+
+export function updateBarang() {
+   $('#edit-barang').on('submit', function (event) {
+      event.preventDefault();
+      let id = $('#id-edit').val();
+      const urlUpdateBarang = $('#edit-data-barang').data('update-barang-url') + '/' + id;
+      $('#nama-barang-edit').removeClass('is-invalid');
+      $('#harga-barang-edit').removeClass('is-invalid');
+      let formdata = new FormData(this);
+      formdata.append('_method', 'PUT');
+      formdata.append('harga_barang', $('#harga-barang-edit').val().replace(/\D/g, ''));
+      $.ajax({
+         headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+         },
+         cache: false,
+         contentType: false,
+         processData: false,
+         method: 'POST',
+         url: urlUpdateBarang,
+         data: formdata,
+         success: function (response) {
+            if (response.status == "success") {
+               reloadHighlightTable();
+               const Toast = Swal.mixin({
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                     toast.onmouseenter = Swal.stopTimer;
+                     toast.onmouseleave = Swal.resumeTimer;
+                  },
+               });
+               Toast.fire({
+                  icon: "success",
+                  title: response.message,
+               });
+               $("#add-barang")[0].reset();
+            } else {
+               const Toast = Swal.mixin({
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                     toast.onmouseenter = Swal.stopTimer;
+                     toast.onmouseleave = Swal.resumeTimer;
+                  },
+               });
+               Toast.fire({
+                  icon: "error",
+                  title: response.message,
+               });
+            }
+         },
+         error: function (response) {
+            if (response.status == 422) {
+               let errorResponse = JSON.parse(response.responseText);
+               if (
+                  errorResponse.errors &&
+                  errorResponse.errors.nama_barang
+               ) {
+                  let errors = errorResponse.errors;
+                  $("#edit-nama-barang").addClass("is-invalid");
+                  $("#error-edit-nama-barang").html(errors.nama_barang[0]);
+               }
+               if (
+                  errorResponse.errors &&
+                  errorResponse.errors.harga_barang
+               ) {
+                  let errors = errorResponse.errors;
+                  $("#edit-harga-barang").addClass("is-invalid");
+                  $("#error-edit-harga-barang").html(errors.harga_barang[0]);
+               }
+            } else {
+               errorAjaxResponse(response);
+            }
+         },
+      })
+   })
 }

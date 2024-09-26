@@ -11,4 +11,8 @@ class Barang extends Model
 
     protected $table = 'barang';
     protected $fillable = ['nama_barang', 'harga_barang'];
+    public function getHargaBarangAttribute($value)
+    {
+        return 'Rp ' . number_format($value, 0, ',', '.');
+    }
 }

@@ -5,5 +5,6 @@ if (page === 'dashboard') {
    import('./services/barang-service').then(module => {
       module.getBarang();
       module.addBarang();
+      module.updateBarang();
    });
 }
