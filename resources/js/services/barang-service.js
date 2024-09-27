@@ -5,30 +5,6 @@ import 'jquery-mask-plugin';
 
 $('#add-harga-barang, #harga-barang-edit').mask('000.000.000', { reverse: true });
 
-function reloadHighlightTable() {
-   tableBarang.ajax.reload(function () {
-      let data = tableBarang.rows().data();
-      let maxId = -1;
-      let rowIndexWithMaxId = -1;
-      data.each(function (value, index) {
-         if (value.id > maxId) {
-            maxId = value.id;
-            rowIndexWithMaxId = index;
-         }
-      });
-      if (rowIndexWithMaxId !== -1) {
-         let rowNode = tableBarang.row(rowIndexWithMaxId).node();
-         $(rowNode).addClass('transition duration-500 ease-in-out bg-blue-500 text-white opacity-100');
-         setTimeout(function () {
-            $(rowNode).addClass('opacity-0');
-            setTimeout(function () {
-               $(rowNode).removeClass('bg-blue-500 text-white opacity-0');
-            }, 500);
-         }, 2000);
-      }
-   }, false);
-}
-
 function editDataBarang(id) {
    const urlEditBarang = $('#edit_modal').data('edit-barang-url') + '/' + id;
    $('#edit_modal').addClass('modal-open');
@@ -154,7 +130,12 @@ export function addBarang() {
    const urlCreateBarang = $('#submit-data-barang').data('create-barang-url');
    $("#add-barang").on("submit", function (event) {
       event.preventDefault();
-      $("#submit-data-barang").html('<i class="fa-solid fa-spinner animate-spin me-1"></i>Menyimpan Data...').attr("disabled", "disabled");
+      let button = $('#submit-data-barang');
+      let icon = button.find('i');
+      let text = button.find('span');
+      text.text('Menambahkan...');
+      icon.removeClass('fa-plus').addClass('fa-spinner fa-spin');
+      button.attr("disabled", true);
       $("#add-nama-barang").removeClass("is-invalid");
       $("#add-harga-barang").removeClass("is-invalid");
       $("#error-nama-barang").html('');
@@ -173,8 +154,8 @@ export function addBarang() {
          data: formData,
          dataType: "json",
          success: function (response) {
+            tableBarang.ajax.reload(null, false);
             if (response.status == "success") {
-               reloadHighlightTable();
                const Toast = Swal.mixin({
                   toast: true,
                   position: "top-end",
@@ -233,9 +214,9 @@ export function addBarang() {
             }
          },
          complete: function () {
-            $("#submit-data-barang")
-               .html("Tambah Barang")
-               .removeAttr("disabled");
+            text.text('Tambah Barang');
+            icon.removeClass('fa-spinner fa-spin').addClass('fa-plus');
+            button.removeAttr("disabled");
          },
       });
    });
@@ -244,8 +225,14 @@ export function addBarang() {
 export function updateBarang() {
    $('#edit-barang').on('submit', function (event) {
       event.preventDefault();
+      let button = $('#edit-data-barang');
+      let icon = button.find('i');
+      let text = button.find('span');
+      button.attr('disabled', true);
+      icon.removeClass('fa-regular fa-pen-to-square').addClass('fa-solid fa-spinner fa-spin');
+      text.text('Mengedit...');
       let id = $('#id-edit').val();
-      const urlUpdateBarang = $('#edit-data-barang').data('update-barang-url') + '/' + id;
+      const urlUpdateBarang = button.data('update-barang-url') + '/' + id;
       $('#nama-barang-edit').removeClass('is-invalid');
       $('#harga-barang-edit').removeClass('is-invalid');
       let formdata = new FormData(this);
@@ -263,7 +250,7 @@ export function updateBarang() {
          data: formdata,
          success: function (response) {
             if (response.status == "success") {
-               reloadHighlightTable();
+               tableBarang.ajax.reload(null, false);
                const Toast = Swal.mixin({
                   toast: true,
                   position: "top-end",
@@ -279,7 +266,6 @@ export function updateBarang() {
                   icon: "success",
                   title: response.message,
                });
-               $("#add-barang")[0].reset();
             } else {
                const Toast = Swal.mixin({
                   toast: true,
@@ -301,18 +287,12 @@ export function updateBarang() {
          error: function (response) {
             if (response.status == 422) {
                let errorResponse = JSON.parse(response.responseText);
-               if (
-                  errorResponse.errors &&
-                  errorResponse.errors.nama_barang
-               ) {
+               if (errorResponse.errors && errorResponse.errors.nama_barang) {
                   let errors = errorResponse.errors;
                   $("#edit-nama-barang").addClass("is-invalid");
                   $("#error-edit-nama-barang").html(errors.nama_barang[0]);
                }
-               if (
-                  errorResponse.errors &&
-                  errorResponse.errors.harga_barang
-               ) {
+               if (errorResponse.errors && errorResponse.errors.harga_barang) {
                   let errors = errorResponse.errors;
                   $("#edit-harga-barang").addClass("is-invalid");
                   $("#error-edit-harga-barang").html(errors.harga_barang[0]);
@@ -321,6 +301,13 @@ export function updateBarang() {
                errorAjaxResponse(response);
             }
          },
-      })
-   })
+         complete: function () {
+            $('#edit_modal').removeClass('modal-open');
+            button.removeAttr('disabled');
+            icon.removeClass('fa-solid fa-spinner fa-spin').addClass('fa-regular fa-pen-to-square');
+            text.text('Edit Barang');
+         }
+      });
+   });
 }
+

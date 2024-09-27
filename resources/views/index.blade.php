@@ -17,7 +17,7 @@
 	</head>
 
 	<body>
-		<div class="max-w-full px-5 md:px-0" id="app" data-page="dashboard">
+		<div class="app max-w-full px-5 md:px-0" data-page="dashboard">
 			<header class="mb-5 mt-7 flex flex-col gap-4">
 				<h1 class="text-center text-2xl font-semibold uppercase">data barang</h1>
 			</header>
@@ -38,11 +38,16 @@
 					</div>
 					<div class="flex flex-col gap-y-4">
 						<button class="text-md rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none" id="submit-data-barang"
-							data-create-barang-url="{{ url('item-create') }}" type="submit">Tambah Barang</button>
+							data-create-barang-url="{{ url('item-create') }}" type="submit">
+							<div class="flex items-center justify-center gap-x-2">
+								<i class="fa-solid fa-plus"></i>
+								<span>Tambah Barang</span>
+							</div>
+						</button>
 					</div>
 				</form>
 				<div class="my-7">
-					<table class="min-w-full divide-gray-300 overflow-hidden text-[#353935]" id="table-barang"
+					<table class="min-w-full divide-gray-300 text-[#353935]" id="table-barang"
 						data-get-barang-url="{{ url('item') }}">
 						<thead class="bg-slate-100">
 							<tr>
@@ -85,11 +90,11 @@
 												id="harga-barang-edit" name="harga_barang" type="text" placeholder="masukkan harga barang">
 											<div class="text-red-500" id="error-edit-harga-barang"></div>
 										</div>
-										<button class="text-md w-20 self-end rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none"
+										<button class="text-md w-32 self-end rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none"
 											id="edit-data-barang" data-update-barang-url="{{ url('item-update') }}" type="submit">
 											<div class="flex items-center justify-center gap-x-2">
 												<i class="fa-regular fa-pen-to-square"></i>
-												<span>Edit</span>
+												<span>Edit Barang</span>
 											</div>
 										</button>
 									</form>
