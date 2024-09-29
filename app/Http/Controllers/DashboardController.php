@@ -121,4 +121,35 @@ class DashboardController extends Controller
         }
         return response()->json($response);
     }
+
+    public function deleteBarang($id)
+    {
+        $id = Crypt::decryptString($id);
+        try {
+            $data = Barang::findOrFail($id);
+        } catch (\Throwable $th) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+                'error' => $th->getMessage()
+            ];
+        }
+        try {
+            DB::beginTransaction();
+            $data->delete();
+            DB::commit();
+            $response = [
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $response = [
+                'status' => 'error',
+                'message' => 'Sepertinya ada masalah',
+                'error' => $th->getMessage()
+            ];
+        }
+        return response()->json($response);
+    }
 }

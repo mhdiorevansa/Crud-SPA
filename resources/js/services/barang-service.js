@@ -53,6 +53,74 @@ function editDataBarang(id) {
 window.editDataBarang = editDataBarang;
 
 let tableBarang;
+
+function deleteBarang(id) {
+   const urlDeleteBarang = $('#edit_modal').data('delete-barang-url');
+   Swal.fire({
+      title: "Apakah kamu yakin?",
+      text: "Kamu tidak dapat mengembalikan ini lagi!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3B82F6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Iya, hapus",
+      cancelButtonText: "Batal",
+   }).then((result) => {
+      if (result.isConfirmed) {
+         $.ajax({
+            headers: {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: urlDeleteBarang + '/' + id,
+            data: {
+               _method: 'DELETE'
+            },
+            success: function (response) {
+               if (response.status == 'success') {
+                  tableBarang.ajax.reload(null, false);
+                  const Toast = Swal.mixin({
+                     toast: true,
+                     position: "top-end",
+                     showConfirmButton: false,
+                     timer: 1500,
+                     timerProgressBar: true,
+                     didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                     },
+                  });
+                  Toast.fire({
+                     icon: "success",
+                     title: response.message,
+                  });
+               } else {
+                  const Toast = Swal.mixin({
+                     toast: true,
+                     position: "top-end",
+                     showConfirmButton: false,
+                     timer: 1500,
+                     timerProgressBar: true,
+                     didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                     },
+                  });
+                  Toast.fire({
+                     icon: "error",
+                     title: response.message,
+                  });
+               }
+            },
+            error: function (response) {
+               errorAjaxResponse(response);
+            }
+         });
+      }
+   });
+}
+window.deleteBarang = deleteBarang;
+
 export function getBarang() {
    const urlGetBarang = $('#table-barang').data('get-barang-url');
    tableBarang = $('#table-barang').DataTable({
@@ -93,7 +161,7 @@ export function getBarang() {
                         <div tabindex="0" role="button" class="btn border-0 p-0"><i class="fa-solid fa-ellipsis"></i></div>
                         <ul tabindex="0" class="dropdown-content menu bg-white rounded-box z-[1] w-32 me-2 p-0 shadow-md">
                            <li><a href="javascript:void(0)" onclick="editDataBarang('${row.id}')"><i class="fa-regular fa-pen-to-square"></i>Edit</a></li>
-                           <li><a><i class="fa-regular fa-trash-can"></i>Hapus</a></li>
+                           <li><a href="javascript:void(0)" onclick="deleteBarang('${row.id}')"><i class="fa-regular fa-trash-can"></i>Hapus</a></li>
                         </ul>
                      </div>`;
             }
@@ -310,4 +378,3 @@ export function updateBarang() {
       });
    });
 }
-

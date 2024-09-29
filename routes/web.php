@@ -8,3 +8,4 @@ Route::get('/item', [DashboardController::class, 'getBarang']);
 Route::post('/item-create', [DashboardController::class, 'postBarang']);
 Route::get('/item-edit/{id}', [DashboardController::class, 'editBarang']);
 Route::put('/item-update/{id}', [DashboardController::class, 'updateBarang']);
+Route::delete('/item-delete/{id}', [DashboardController::class, 'deleteBarang']);

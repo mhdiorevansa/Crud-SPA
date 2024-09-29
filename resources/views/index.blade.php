@@ -62,7 +62,7 @@
 						</tbody>
 					</table>
 					{{-- modal edit barang --}}
-					<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('item-edit') }}">
+					<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('item-edit') }}" data-delete-barang-url="{{ url('item-delete') }}">
 						<div class="modal-box bg-white">
 							<div class="hidden items-center justify-center text-center" id="loader">
 								<div class="flex items-center justify-center">
