@@ -6,5 +6,6 @@ if (page === 'dashboard') {
       module.getBarang();
       module.addBarang();
       module.updateBarang();
+      module.chatUser();
    });
 }

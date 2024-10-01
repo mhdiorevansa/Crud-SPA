@@ -378,3 +378,21 @@ export function updateBarang() {
       });
    });
 }
+
+export function chatUser() {
+   $('#form-chat').on('submit', function (event) {
+      event.preventDefault();
+      let message = $('#message-input').val();
+      let token = $('meta[name="csrf-token"]').attr('content');
+      $.post('/message-sent', { _token: token, message: message }, (res) => {
+         console.log(res);
+         $('#message-input').val('');
+      }).catch((err) => {
+         console.log(err);
+      });
+   });
+   window.Echo.channel('chats').listen('MessageSent', (e) => {
+      console.log(e);
+      $('#chat-box').append(`<div class="chat-header mb-1">${e.name}<time class="text-xs opacity-50 ms-2">2 hours ago</time></div><div class="chat-bubble mb-2 bg-slate-400">${e.message}</div>`)
+   });
+}

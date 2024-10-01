@@ -13,7 +13,7 @@
 		<title>{{ config('app.name') }} | {{ $web['title'] }}</title>
 		<link href="https://fonts.bunny.net" rel="preconnect">
 		<link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-		@vite('resources/css/app.css')
+		@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/bootstrap.js'])
 	</head>
 
 	<body>
@@ -62,7 +62,8 @@
 						</tbody>
 					</table>
 					{{-- modal edit barang --}}
-					<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('item-edit') }}" data-delete-barang-url="{{ url('item-delete') }}">
+					<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('item-edit') }}"
+						data-delete-barang-url="{{ url('item-delete') }}">
 						<div class="modal-box bg-white">
 							<div class="hidden items-center justify-center text-center" id="loader">
 								<div class="flex items-center justify-center">
@@ -104,9 +105,28 @@
 					</dialog>
 				</div>
 			</div>
+			{{-- chat box --}}
+			<div class="card fixed bottom-0 right-0 z-10 m-3 h-[55vh] w-[22rem] overflow-y-scroll border-2 bg-white shadow-md">
+				<div class="card-body py-0 px-6">
+					<h2 class="card-title mt-3">Live Chat!</h2>
+					<hr>
+					<div class="chat chat-start h-[33vh] flex flex-col justify-start ps-2 overflow-y-scroll" id="chat-box">
+						{{-- content messages --}}
+					</div>
+					<div class="card-actions mt-3 absolute bottom-4">
+						<form id="form-chat" autocomplete="off">
+							@csrf
+							<div class="join">
+								<input class="input join-item border border-gray-300 focus:border-gray-300 focus:outline-none" id="message-input" name="message"
+									type="text" placeholder="Ketik pesan" />
+								<button class="btn join-item border border-gray-300 hover:border-gray-300" id="send-msg"
+									type="submit">kirim</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		@vite('resources/js/app.js')
 		<script src="https://kit.fontawesome.com/4225da578e.js" crossorigin="anonymous"></script>
 	</body>
 
