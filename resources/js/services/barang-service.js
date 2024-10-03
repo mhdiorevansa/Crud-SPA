@@ -380,19 +380,64 @@ export function updateBarang() {
 }
 
 export function chatUser() {
+   const sentMessages = new Set();
    $('#form-chat').on('submit', function (event) {
       event.preventDefault();
+      $('#send-msg').attr('disabled', true);
       let message = $('#message-input').val();
       let token = $('meta[name="csrf-token"]').attr('content');
+      let timestamp = new Date().toLocaleTimeString();
+
+      if (sentMessages.has(message)) return;
+
+      const messageHtml = `
+      <div class="chat chat-end">
+         <div class="flex items-center mb-2" id="message-${Date.now()}">
+            <span class="message-status me-2">
+               <i class="fas fa-clock loading-icon text-gray-500"></i>
+            </span>
+            <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
+               <span class="message-content">Anda: ${message}</span>
+            </div>
+         </div>
+      </div>
+      <time class="text-xs mb-2 text-end text-gray-500">${timestamp}</time>`;
+      $('#chat-box').append(messageHtml);
+      $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+
+      sentMessages.add(message);
+
       $.post('/message-sent', { _token: token, message: message }, (res) => {
-         console.log(res);
+         console.log(res.status);
          $('#message-input').val('');
       }).catch((err) => {
          console.log(err);
+         sentMessages.delete(message);
+         $('#chat-box').find(`#message-${Date.now()}`).remove();
       });
    });
-   window.Echo.channel('chats').listen('MessageSent', (e) => {
-      console.log(e);
-      $('#chat-box').append(`<div class="chat-header mb-1">${e.name}<time class="text-xs opacity-50 ms-2">2 hours ago</time></div><div class="chat-bubble mb-2 bg-slate-400">${e.message}</div>`)
+
+   window.Echo.private('chats').listen('MessageSent', (e) => {
+      $('#send-msg').removeAttr('disabled');
+      const messageElement = $('#chat-box').find(`.message-content:contains("${e.message}")`).closest('.flex');
+      if (sentMessages.has(e.message)) {
+         messageElement.find('.loading-icon').removeClass('fa-clock').addClass('fa-check text-green-500');
+         sentMessages.delete(e.message);
+      } else {
+         const messageHtml = `
+         <div class="chat chat-start ps-2">
+            <div class="flex items-center mb-2">
+               <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
+                  <span class="message-content">${e.name}: ${e.message}</span>
+               </div>
+               <span class="message-status ml-2">
+                  <i class="fas fa-check check-icon text-green-500"></i>
+               </span>
+            </div>
+         </div>
+         <time class="text-xs mb-2 text-gray-500">${new Date().toLocaleTimeString()}</time>`;
+         $('#chat-box').append(messageHtml);
+         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+      }
    });
 }

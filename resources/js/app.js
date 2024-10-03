@@ -1,5 +1,5 @@
 import $ from "jquery";
-const page = $('.app').data('page');
+let page = $('.app').data('page');
 
 if (page === 'dashboard') {
    import('./services/barang-service').then(module => {
@@ -7,5 +7,9 @@ if (page === 'dashboard') {
       module.addBarang();
       module.updateBarang();
       module.chatUser();
+   });
+} else if (page === 'login') {
+   import('./services/auth-service').then(module => {
+      module.login();
    });
 }
