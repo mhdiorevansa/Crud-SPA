@@ -1,6 +1,7 @@
 @extends('layout.main')
 @section('content')
 	<div class="app" data-page="dashboard">
+		<button class="bg-red-500 text-white p-2 rounded z-10 fixed top-3 left-3" id="logout" data-logout-url="{{ url('dashboard/logout') }}">Logout</button>
 		<header class="mb-5 mt-7 flex flex-col gap-4">
 			<h1 class="text-center text-2xl font-semibold uppercase">data barang</h1>
 		</header>
@@ -21,7 +22,7 @@
 				</div>
 				<div class="flex flex-col gap-y-4">
 					<button class="text-md rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none" id="submit-data-barang"
-						data-create-barang-url="{{ url('item/item-create') }}" type="submit">
+						data-create-barang-url="{{ url('dashboard/item-create') }}" type="submit">
 						<div class="flex items-center justify-center gap-x-2">
 							<i class="fa-solid fa-plus"></i>
 							<span>Tambah Barang</span>
@@ -30,7 +31,7 @@
 				</div>
 			</form>
 			<div class="my-7">
-				<table class="min-w-full divide-gray-300 text-[#353935]" id="table-barang" data-get-barang-url="{{ url('item') }}">
+				<table class="min-w-full divide-gray-300 text-[#353935]" id="table-barang" data-get-barang-url="{{ url('dashboard/item-all') }}">
 					<thead class="bg-slate-100">
 						<tr>
 							<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">No</th>
@@ -44,8 +45,8 @@
 					</tbody>
 				</table>
 				{{-- modal edit barang --}}
-				<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('item/item-edit') }}"
-					data-delete-barang-url="{{ url('item/item-delete') }}">
+				<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('dashboard/item-edit') }}"
+					data-delete-barang-url="{{ url('dashboard/item-delete') }}">
 					<div class="modal-box bg-white">
 						<div class="hidden items-center justify-center text-center" id="loader">
 							<div class="flex items-center justify-center">
@@ -74,7 +75,7 @@
 										<div class="text-red-500" id="error-edit-harga-barang"></div>
 									</div>
 									<button class="text-md w-32 self-end rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none"
-										id="edit-data-barang" data-update-barang-url="{{ url('item/item-update') }}" type="submit">
+										id="edit-data-barang" data-update-barang-url="{{ url('dashboard/item-update') }}" type="submit">
 										<div class="flex items-center justify-center gap-x-2">
 											<i class="fa-regular fa-pen-to-square"></i>
 											<span>Edit Barang</span>

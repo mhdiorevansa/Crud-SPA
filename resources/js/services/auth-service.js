@@ -1,7 +1,7 @@
 import $ from "jquery";
 import Swal from "sweetalert2";
 
-export function login () {
+export function login() {
    const urlAuth = $('#submit-login').data('url-login');
    $('#login-form').on('submit', function (event) {
       event.preventDefault();
@@ -23,7 +23,7 @@ export function login () {
          cache: false,
          contentType: false,
          processData: false,
-         method: "post",
+         method: "POST",
          url: urlAuth,
          data: formData,
          dataType: "json",
@@ -89,11 +89,80 @@ export function login () {
                errorAjaxResponse(response);
             }
          },
-         complete: function() {
+         complete: function () {
             text.text('Login');
             icon.removeClass('fa-spinner fa-spin').addClass('fa-right-to-bracker');
             button.removeAttr('disabled');
          }
       });
    });
+}
+
+export function logout() {
+   const urlLogout = $('#logout').data('logout-url');
+   $('#logout').on('click', function(event) {
+      event.preventDefault();
+      Swal.fire({
+         title: "Apakah kamu yakin?",
+         text: "Kamu akan logout dari sistem ini!",
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#3B82F6",
+         cancelButtonColor: "#d33",
+         confirmButtonText: "Iya, logout",
+         cancelButtonText: "Batal",
+      }).then((result) => {
+         if (result.isConfirmed) {
+            $.ajax({
+               headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               },
+               type: "GET",
+               url: urlLogout,
+               dataType: 'json',
+               success: function (response) {
+                  if (response.status == 'success') {
+                     const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                           toast.onmouseenter = Swal.stopTimer;
+                           toast.onmouseleave = Swal.resumeTimer;
+                        },
+                     });
+                     Toast.fire({
+                        icon: "success",
+                        title: response.message,
+                     });
+                     setTimeout(() => {
+                        window.location.href = response.url;
+                     }, 1700);
+                  } else {
+                     const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                           toast.onmouseenter = Swal.stopTimer;
+                           toast.onmouseleave = Swal.resumeTimer;
+                        },
+                     });
+                     Toast.fire({
+                        icon: "error",
+                        title: response.message,
+                     });
+                  }
+               },
+               error: function (response) {
+                  errorAjaxResponse(response);
+               }
+            });
+         }
+      });
+   })
 }

@@ -8,6 +8,9 @@ if (page === 'dashboard') {
       module.updateBarang();
       module.chatUser();
    });
+   import('./services/auth-service').then(module => {
+      module.logout();
+   });
 } else if (page === 'login') {
    import('./services/auth-service').then(module => {
       module.login();
