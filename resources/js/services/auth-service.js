@@ -100,7 +100,7 @@ export function login() {
 
 export function logout() {
    const urlLogout = $('#logout').data('logout-url');
-   $('#logout').on('click', function(event) {
+   $('#logout').on('click', function (event) {
       event.preventDefault();
       Swal.fire({
          title: "Apakah kamu yakin?",

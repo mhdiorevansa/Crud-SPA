@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
-use Faker\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

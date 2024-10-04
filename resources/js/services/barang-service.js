@@ -383,61 +383,127 @@ export function chatUser() {
    const sentMessages = new Set();
    $('#form-chat').on('submit', function (event) {
       event.preventDefault();
-      $('#send-msg').attr('disabled', true);
-      let message = $('#message-input').val();
+      const sendButton = $('#send-msg');
+      sendButton.attr('disabled', true);
+
+      let message = $('#message-input').val().trim();
       let token = $('meta[name="csrf-token"]').attr('content');
       let timestamp = new Date().toLocaleTimeString();
 
-      if (sentMessages.has(message)) return;
-
+      if (sentMessages.has(message) || message === '') {
+         sendButton.attr('disabled', false);
+         return;
+      }
+      const messageId = `message-${Date.now()}`;
       const messageHtml = `
-      <div class="chat chat-end">
-         <div class="flex items-center mb-2" id="message-${Date.now()}">
-            <span class="message-status me-2">
-               <i class="fas fa-clock loading-icon text-gray-500"></i>
-            </span>
-            <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
-               <span class="message-content">Anda: ${message}</span>
+      <div class="w-max-full flex flex-col">
+         <div class="chat chat-end">
+            <div class="flex items-center mb-2" id="${messageId}">
+               <span class="message-status me-2">
+                  <i class="fas fa-clock loading-icon text-gray-500"></i>
+               </span>
+               <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
+                  <span class="message-content">Anda: ${message}</span>
+               </div>
             </div>
          </div>
-      </div>
-      <time class="text-xs mb-2 text-end text-gray-500">${timestamp}</time>`;
+         <time class="text-xs mb-2 text-end text-gray-500 w-full">${timestamp}</time>
+      </div>`;
+
       $('#chat-box').append(messageHtml);
       $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
 
       sentMessages.add(message);
 
-      $.post('/message-sent', { _token: token, message: message }, (res) => {
-         console.log(res.status);
-         $('#message-input').val('');
-      }).catch((err) => {
+      $.post('/message-sent', { _token: token, message: message }, (response) => {
+         if (response.status === 'success') {
+            $('#message-input').val('');
+         } else {
+            sentMessages.delete(message);
+            $(`#${messageId}`).remove();
+         }
+      }).fail((err) => {
          console.log(err);
          sentMessages.delete(message);
-         $('#chat-box').find(`#message-${Date.now()}`).remove();
+         $(`#${messageId}`).remove();
+      }).always(() => {
+         sendButton.attr('disabled', false);
       });
    });
 
    window.Echo.private('chats').listen('MessageSent', (e) => {
-      $('#send-msg').removeAttr('disabled');
+      $('#send-msg').attr('disabled', false);
       const messageElement = $('#chat-box').find(`.message-content:contains("${e.message}")`).closest('.flex');
       if (sentMessages.has(e.message)) {
          messageElement.find('.loading-icon').removeClass('fa-clock').addClass('fa-check text-green-500');
          sentMessages.delete(e.message);
       } else {
-         const messageHtml = `
-         <div class="chat chat-start ps-2">
-            <div class="flex items-center mb-2">
-               <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
-                  <span class="message-content">${e.name}: ${e.message}</span>
+         const receivedMessageHtml = `
+         <div class="w-max-full flex flex-col">
+            <div class="chat chat-start ps-2">
+               <div class="flex items-center mb-2">
+                  <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
+                     <span class="message-content">${e.name}: ${e.message}</span>
+                  </div>
+                  <span class="message-status ml-2">
+                     <i class="fas fa-check check-icon text-green-500"></i>
+                  </span>
                </div>
-               <span class="message-status ml-2">
-                  <i class="fas fa-check check-icon text-green-500"></i>
-               </span>
             </div>
-         </div>
-         <time class="text-xs mb-2 text-gray-500">${new Date().toLocaleTimeString()}</time>`;
-         $('#chat-box').append(messageHtml);
+            <time class="text-xs text-start mb-2 text-gray-500 w-full">${new Date().toLocaleTimeString()}</time>
+         </div>`;
+         $('#chat-box').append(receivedMessageHtml);
          $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+      }
+   });
+}
+
+export function chatRoom() {
+   let isOpen = false;
+   $('#button-chat-room').on('click', async function (event) {
+      event.preventDefault();
+      isOpen = !isOpen;
+      if (isOpen) {
+         $('#chat-room').removeClass('hidden');
+         $('#button-chat-room').find('i').removeClass('fa-regular fa-comments').addClass('fa-solid fa-xmark');
+         try {
+            const response = await $.ajax({
+               url: $('#all-user').data('all-user'),
+               method: 'GET',
+               headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+            });
+            if (response.status === 'success' && Array.isArray(response.data) && response.data.length > 0) {
+               const userListHtml = response.data.map(user => `
+                  <div class="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer user-chat" data-userid="${user.id}" data-username="${user.name}">
+                     <div class="avatar">
+                        <div class="w-10 rounded-full">
+                           <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="${user.name}" />
+                        </div>
+                     </div>
+                     <span class="text-lg">${user.name}</span>
+                  </div>
+               `).join('');
+               $('#all-user').html(userListHtml);
+               $('#all-user').find('.user-chat').on('click', function () {
+                  const userId = $(this).data('userid');
+                  const userName = $(this).data('username');
+                  $('#title-chat').text(userName).addClass('capitalize');
+                  $('#chat-box').removeClass('hidden');
+                  $('#all-user').addClass('hidden');
+                  $('#chat-form').removeClass('hidden');
+               });
+            } else {
+               $('#all-user').html('<p class="text-center p-4">No users found</p>');
+            }
+         } catch (error) {
+            console.error('Error fetching users:', error);
+            $('#all-user').html('<p class="text-center p-4">Error loading users</p>');
+         }
+      } else {
+         $('#chat-room').addClass('hidden');
+         $('#button-chat-room').find('i').removeClass('fa-solid fa-xmark').addClass('fa-regular fa-comments');
       }
    });
 }

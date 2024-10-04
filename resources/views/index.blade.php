@@ -1,11 +1,12 @@
 @extends('layout.main')
 @section('content')
 	<div class="app" data-page="dashboard">
-		<button class="bg-red-500 text-white p-2 rounded z-10 fixed top-3 left-3" id="logout" data-logout-url="{{ url('dashboard/logout') }}">Logout</button>
+		<button class="fixed left-3 top-3 z-10 rounded bg-red-500 p-2 text-white" id="logout"
+			data-logout-url="{{ url('dashboard/logout') }}">Logout</button>
 		<header class="mb-5 mt-7 flex flex-col gap-4">
 			<h1 class="text-center text-2xl font-semibold uppercase">data barang</h1>
 		</header>
-		<div class="w-[27rem]">
+		<div class="w-[28rem]">
 			<form class="flex flex-col gap-y-5" id="add-barang" autocomplete="off">
 				@csrf
 				<div class="flex flex-col">
@@ -31,7 +32,8 @@
 				</div>
 			</form>
 			<div class="my-7">
-				<table class="min-w-full divide-gray-300 text-[#353935]" id="table-barang" data-get-barang-url="{{ url('dashboard/item-all') }}">
+				<table class="min-w-full divide-gray-300 text-[#353935]" id="table-barang"
+					data-get-barang-url="{{ url('dashboard/item-all') }}">
 					<thead class="bg-slate-100">
 						<tr>
 							<th class="py-3 ps-3 text-left font-medium capitalize tracking-wider">No</th>
@@ -45,8 +47,8 @@
 					</tbody>
 				</table>
 				{{-- modal edit barang --}}
-				<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal" data-edit-barang-url="{{ url('dashboard/item-edit') }}"
-					data-delete-barang-url="{{ url('dashboard/item-delete') }}">
+				<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal"
+					data-edit-barang-url="{{ url('dashboard/item-edit') }}" data-delete-barang-url="{{ url('dashboard/item-delete') }}">
 					<div class="modal-box bg-white">
 						<div class="hidden items-center justify-center text-center" id="loader">
 							<div class="flex items-center justify-center">
@@ -89,25 +91,36 @@
 			</div>
 		</div>
 		{{-- chat box --}}
-		<div class="card fixed bottom-0 right-0 z-10 m-3 h-[55vh] w-[22rem] overflow-y-scroll border-2 bg-white shadow-md">
-			<div class="card-body px-6 py-0">
-				<h2 class="card-title mt-3">Live Chat!</h2>
-				<hr>
-				<div class="flex h-[33vh] flex-col justify-start overflow-y-scroll" id="chat-box">
-					{{-- content chat --}}
-				</div>
-				<div class="card-actions absolute bottom-4 mt-3">
-					<form id="form-chat" autocomplete="off">
-						@csrf
-						<div class="join">
-							<input class="input join-item border border-gray-300 focus:border-gray-300 focus:outline-none"
-								id="message-input" name="message" type="text" placeholder="Ketik pesan" />
-							<button class="btn join-item border border-gray-300 hover:border-gray-300" id="send-msg"
-								type="submit">kirim</button>
+		<div class="dropdown-end dropdown-top dropdown fixed bottom-0 right-0 z-10 m-3">
+			<label class="btn my-3 mx-1 bg-white hover:bg-white" id="button-chat-room" tabindex="0">
+				<i class="fa-regular fa-comments text-xl"></i>
+			</label>
+			<div class="menu dropdown-content z-[1] w-[22rem] bg-white shadow-md" id="chat-room" tabindex="0">
+				<div class="card h-[55vh] rounded-md">
+					<div class="card-body px-6 py-0">
+						<h2 class="card-title mt-3" id="title-chat">Live Chat!</h2>
+						<hr>
+						<div class="h-[33vh] overflow-y-scroll" id="all-user" data-all-user="{{ url('dashboard/get-all-user') }}">
+							<!-- User list will be populated here -->
 						</div>
-					</form>
+						<div class="hidden h-[33vh] overflow-y-scroll" id="chat-box">
+							<!-- Chat messages will be displayed here -->
+						</div>
+						<div class="card-actions absolute bottom-4 mt-3 hidden" id="chat-form">
+							<form id="form-chat" autocomplete="off">
+								@csrf
+								<div class="join">
+									<input class="input join-item border border-gray-300 focus:border-gray-300 focus:outline-none"
+										id="message-input" name="message" type="text" placeholder="Ketik pesan" />
+									<button class="btn join-item border border-gray-300 hover:border-gray-300" id="send-msg"
+										type="submit">Kirim</button>
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+
 	</div>
 @endsection

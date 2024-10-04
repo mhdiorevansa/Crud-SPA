@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
    Route::get('/item-edit/{id}', [DashboardController::class, 'editBarang']);
    Route::put('/item-update/{id}', [DashboardController::class, 'updateBarang']);
    Route::delete('/item-delete/{id}', [DashboardController::class, 'deleteBarang']);
+   Route::get('/get-all-user', [DashboardController::class, 'getAllUser']);
    Route::get('/logout', [AuthController::class, 'logout']);
 });
 

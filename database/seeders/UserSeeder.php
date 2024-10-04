@@ -20,9 +20,16 @@ class UserSeeder extends Seeder
         Schema::enableForeignKeyConstraints();
 
         DB::table('users')->insert([
-            'name' => 'user',
-            'email' => 'user@gmail.com',
-            'password' => \bcrypt('12345')
+            [
+                'name' => 'lesto',
+                'email' => 'lesto@gmail.com',
+                'password' => \bcrypt('12345')
+            ],
+            [
+                'name' => 'ipul',
+                'email' => 'ipul@gmail.com',
+                'password' => \bcrypt('12345')
+            ]
         ]);
     }
 }

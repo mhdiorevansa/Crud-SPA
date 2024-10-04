@@ -7,6 +7,7 @@ if (page === 'dashboard') {
       module.addBarang();
       module.updateBarang();
       module.chatUser();
+      module.chatRoom();
    });
    import('./services/auth-service').then(module => {
       module.logout();

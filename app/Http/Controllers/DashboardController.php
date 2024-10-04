@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -144,6 +146,32 @@ class DashboardController extends Controller
             ];
         } catch (\Throwable $th) {
             DB::rollBack();
+            $response = [
+                'status' => 'error',
+                'message' => 'Sepertinya ada masalah',
+                'error' => $th->getMessage()
+            ];
+        }
+        return response()->json($response);
+    }
+
+    public function getAllUser()
+    {
+        try {
+            $userActive = FacadesAuth::user();
+            $users = User::where('id', '!=', $userActive->id)->get();
+            $users = $users->map(function ($user) {
+                return [
+                    'id' => Crypt::encryptString($user->id),
+                    'name' => $user->name,
+                ];
+            });            
+            $response = [
+                'status' => 'success',
+                'message' => 'Data user berhasil di load',
+                'data' => $users
+            ];
+        } catch (\Throwable $th) {
             $response = [
                 'status' => 'error',
                 'message' => 'Sepertinya ada masalah',

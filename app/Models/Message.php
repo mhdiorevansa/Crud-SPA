@@ -16,16 +16,13 @@ class Message extends Model
         'text'
     ];
     
-    public function user(): BelongsTo
+    public function users(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function getTimeAttribute(): string
+    public function conversations(): BelongsTo
     {
-        return date(
-            "d M Y, H:i:s",
-            strtotime($this->attributes['created_at'])
-        );
+        return $this->belongsTo(Conversation::class, 'conversation_id', 'id');
     }
 }
