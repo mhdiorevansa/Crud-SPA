@@ -379,6 +379,7 @@ export function updateBarang() {
    });
 }
 
+let conversationId = null;
 export function chatUser() {
    const sentMessages = new Set();
    $('#form-chat').on('submit', function (event) {
@@ -388,36 +389,46 @@ export function chatUser() {
 
       let message = $('#message-input').val().trim();
       let token = $('meta[name="csrf-token"]').attr('content');
-      let timestamp = new Date().toLocaleTimeString();
+      let recipientUserId = $('#title-chat').data('user-id');
 
       if (sentMessages.has(message) || message === '') {
          sendButton.attr('disabled', false);
          return;
       }
+
       const messageId = `message-${Date.now()}`;
       const messageHtml = `
-      <div class="w-max-full flex flex-col">
+      <div class="w-max-full flex flex-col" id="${messageId}">
          <div class="chat chat-end">
-            <div class="flex items-center mb-2" id="${messageId}">
+            <div class="flex items-center mb-2">
                <span class="message-status me-2">
                   <i class="fas fa-clock loading-icon text-gray-500"></i>
                </span>
                <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
-                  <span class="message-content">Anda: ${message}</span>
+                  <span class="message-content">${message}</span>
                </div>
             </div>
          </div>
-         <time class="text-xs mb-2 text-end text-gray-500 w-full">${timestamp}</time>
+         <time class="text-xs mb-2 text-end text-gray-500 w-full">${new Date().toLocaleTimeString()}</time>
       </div>`;
 
       $('#chat-box').append(messageHtml);
       $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
-
       sentMessages.add(message);
 
-      $.post('/message-sent', { _token: token, message: message }, (response) => {
+      $.post('/message-sent', {
+         _token: token,
+         text: message,
+         user_id: recipientUserId,
+         conversation_id: conversationId,
+      }, (response) => {
          if (response.status === 'success') {
             $('#message-input').val('');
+            if (!conversationId) {
+               conversationId = response.conversationId;
+            }
+            // Update message status to sent
+            $(`#${messageId} .message-status i`).removeClass('fa-clock').addClass('fa-check text-green-500');
          } else {
             sentMessages.delete(message);
             $(`#${messageId}`).remove();
@@ -431,30 +442,29 @@ export function chatUser() {
       });
    });
 
-   window.Echo.private('chats').listen('MessageSent', (e) => {
+   window.Echo.private(`chats`).listen('MessageSent', (e) => {
       $('#send-msg').attr('disabled', false);
-      const messageElement = $('#chat-box').find(`.message-content:contains("${e.message}")`).closest('.flex');
       if (sentMessages.has(e.message)) {
-         messageElement.find('.loading-icon').removeClass('fa-clock').addClass('fa-check text-green-500');
-         sentMessages.delete(e.message);
-      } else {
-         const receivedMessageHtml = `
-         <div class="w-max-full flex flex-col">
-            <div class="chat chat-start ps-2">
-               <div class="flex items-center mb-2">
+         return;
+      }
+      const receivedMessageHtml = `
+      <div class="w-max-full flex flex-col" id="message-${e.messageId}">
+         <div class="chat chat-start ps-2">
+            <div class="flex items-center mb-2">
                   <div class="chat-bubble bg-slate-400 p-2 rounded-lg">
-                     <span class="message-content">${e.name}: ${e.message}</span>
+                     <span class="message-content">${e.message}</span>
                   </div>
                   <span class="message-status ml-2">
-                     <i class="fas fa-check check-icon text-green-500"></i>
+                     <i class="fa-solid fa-check text-green-500"></i>
                   </span>
-               </div>
             </div>
-            <time class="text-xs text-start mb-2 text-gray-500 w-full">${new Date().toLocaleTimeString()}</time>
-         </div>`;
-         $('#chat-box').append(receivedMessageHtml);
-         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
-      }
+         </div>
+         <time class="text-xs text-start mb-2 text-gray-500 w-full">${new Date().toLocaleTimeString()}</time>
+      </div>`;
+      $('#chat-box').append(receivedMessageHtml);
+      $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+
+      sentMessages.add(e.message);
    });
 }
 
@@ -489,10 +499,11 @@ export function chatRoom() {
                $('#all-user').find('.user-chat').on('click', function () {
                   const userId = $(this).data('userid');
                   const userName = $(this).data('username');
-                  $('#title-chat').text(userName).addClass('capitalize');
+                  $('#title-chat').text(userName).addClass('capitalize').data('user-id', userId);
                   $('#chat-box').removeClass('hidden');
                   $('#all-user').addClass('hidden');
                   $('#chat-form').removeClass('hidden');
+                  conversationId = null;
                });
             } else {
                $('#all-user').html('<p class="text-center p-4">No users found</p>');

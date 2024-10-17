@@ -111,7 +111,7 @@
 								@csrf
 								<div class="join">
 									<input class="input join-item border border-gray-300 focus:border-gray-300 focus:outline-none"
-										id="message-input" name="message" type="text" placeholder="Ketik pesan" />
+										id="message-input" name="text" type="text" placeholder="Ketik pesan" />
 									<button class="btn join-item border border-gray-300 hover:border-gray-300" id="send-msg"
 										type="submit">Kirim</button>
 								</div>
@@ -121,6 +121,5 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 @endsection
