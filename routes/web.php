@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
    Route::put('/item-update/{id}', [DashboardController::class, 'updateBarang']);
    Route::delete('/item-delete/{id}', [DashboardController::class, 'deleteBarang']);
    Route::get('/get-all-user', [DashboardController::class, 'getAllUser']);
+   Route::get('/data-kampus', [DashboardController::class, 'getDataKampus']);
    Route::get('/logout', [AuthController::class, 'logout']);
 });
 

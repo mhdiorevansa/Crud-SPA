@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 *,
-*:hover{
-  scrollbar-width: thin;
-  scrollbar-color: #3f83f8 transparent;
+*:hover {
+    scrollbar-width: thin;
+    scrollbar-color: #3f83f8 transparent;
 }
 
 .dt-paging button,

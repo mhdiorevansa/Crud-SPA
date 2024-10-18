@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
 
 class DashboardController extends Controller
@@ -170,6 +172,41 @@ class DashboardController extends Controller
                 'status' => 'success',
                 'message' => 'Data user berhasil di load',
                 'data' => $users
+            ];
+        } catch (\Throwable $th) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Sepertinya ada masalah',
+                'error' => $th->getMessage()
+            ];
+        }
+        return response()->json($response);
+    }
+
+    public function getDataKampus(Request $request)
+    {
+        try {
+            $path = resource_path('js/services/data/data-kampus.json');
+            if (!file_exists($path)) {
+                throw new Exception('File not found');
+            }
+            $data = json_decode(File::get($path), true);
+            $page = $request->get('page', 1);
+            $perPage = $request->get('perPage', 6);
+            // menentukan data diambil dari indeks ke berapa
+            $offset = ($page - 1) * $perPage;
+            // slice data array, argumen pertama adalah datanya, argumen kedua adalah dimulai dari indeks ke berapa, argumen ketiga item yang diambil berapa
+            $paginatedData = array_slice($data, $offset, $perPage);
+            $response = [
+                'status' => 'success',
+                'message' => 'Data kampus berhasil di load',
+                'data' => $paginatedData,
+                'pagination' => [
+                    'current_page' => (int) $page,
+                    'per_page' => (int) $perPage,
+                    'total' => count($data),
+                    'last_page' => \ceil(count($data) / $perPage)
+                ]
             ];
         } catch (\Throwable $th) {
             $response = [
