@@ -11,6 +11,7 @@
         "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.2",
+        "silviolleite/laravelpwa": "^2.0",
         "yajra/laravel-datatables-oracle": "11.0"
     },
     "require-dev": {
