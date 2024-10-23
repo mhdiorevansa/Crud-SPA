@@ -58,64 +58,64 @@
 						<!-- Data Table -->
 					</tbody>
 				</table>
-				{{-- modal edit barang --}}
-				<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal"
-					data-edit-barang-url="{{ url('dashboard/item-edit') }}" data-delete-barang-url="{{ url('dashboard/item-delete') }}">
-					<div class="modal-box bg-white">
-						<div class="hidden items-center justify-center text-center" id="loader">
-							<div class="flex items-center justify-center">
-								<i class="fa fa-spinner fa-spin me-2 text-2xl"></i>
-								<span>Loading...</span>
-							</div>
-						</div>
-						<div class="hidden" id="modal_content">
-							<button class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2" id="close_modal">
-								✕
-							</button>
-							<h3 class="text-lg font-bold">Edit Barang</h3>
-							<div class="modal-action mt-4">
-								<form class="align-items-center flex w-full flex-col gap-y-4" id="edit-barang">
-									@csrf
-									<input id="id-edit" name="id" type="hidden" />
-									<div class="flex flex-col">
-										<label class="text-md mb-2" for="">
-											Nama Barang
-										</label>
-										<input
-											class="text-md rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none"
-											id="nama-barang-edit" name="nama_barang" type="text" placeholder="masukkan nama barang" />
-										<div class="text-red-500" id="error-edit-nama-barang"></div>
-									</div>
-									<div class="flex flex-col">
-										<label class="text-md mb-2" for="">
-											Harga Barang
-										</label>
-										<input
-											class="text-md rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none"
-											id="harga-barang-edit" name="harga_barang" type="text" placeholder="masukkan harga barang" />
-										<div class="text-red-500" id="error-edit-harga-barang"></div>
-									</div>
-									<button class="text-md w-32 self-end rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none"
-										id="edit-data-barang" data-update-barang-url="{{ url('dashboard/item-update') }}" type="submit">
-										<div class="flex items-center justify-center gap-x-2">
-											<i class="fa-regular fa-pen-to-square"></i>
-											<span>Edit Barang</span>
-										</div>
-									</button>
-								</form>
-							</div>
+			</div>
+			{{-- modal edit barang --}}
+			<dialog class="modal modal-bottom sm:modal-middle" id="edit_modal"
+				data-edit-barang-url="{{ url('dashboard/item-edit') }}" data-delete-barang-url="{{ url('dashboard/item-delete') }}">
+				<div class="modal-box bg-white">
+					<div class="hidden items-center justify-center text-center" id="loader">
+						<div class="flex items-center justify-center">
+							<i class="fa fa-spinner fa-spin me-2 text-2xl"></i>
+							<span>Loading...</span>
 						</div>
 					</div>
-				</dialog>
-			</div>
+					<div class="hidden" id="modal_content">
+						<button class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2" id="close_modal">
+							✕
+						</button>
+						<h3 class="text-lg font-bold">Edit Barang</h3>
+						<div class="modal-action mt-4">
+							<form class="align-items-center flex w-full flex-col gap-y-4" id="edit-barang">
+								@csrf
+								<input id="id-edit" name="id" type="hidden" />
+								<div class="flex flex-col">
+									<label class="text-md mb-2" for="">
+										Nama Barang
+									</label>
+									<input
+										class="text-md rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none"
+										id="nama-barang-edit" name="nama_barang" type="text" placeholder="masukkan nama barang" />
+									<div class="text-red-500" id="error-edit-nama-barang"></div>
+								</div>
+								<div class="flex flex-col">
+									<label class="text-md mb-2" for="">
+										Harga Barang
+									</label>
+									<input
+										class="text-md rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none"
+										id="harga-barang-edit" name="harga_barang" type="text" placeholder="masukkan harga barang" />
+									<div class="text-red-500" id="error-edit-harga-barang"></div>
+								</div>
+								<button class="text-md w-32 self-end rounded-md bg-blue-500 p-2 text-white shadow-sm focus:outline-none"
+									id="edit-data-barang" data-update-barang-url="{{ url('dashboard/item-update') }}" type="submit">
+									<div class="flex items-center justify-center gap-x-2">
+										<i class="fa-regular fa-pen-to-square"></i>
+										<span>Edit Barang</span>
+									</div>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</dialog>
 			<hr>
 			{{-- data kampus --}}
 			<div class="my-5 max-w-full">
 				<h1 class="mb-4 text-center text-2xl font-semibold uppercase">
 					data kampus
 				</h1>
-				<div class="h-[27rem] py-5 overflow-auto">
-					<div class="hidden items-center self-center justify-center text-center" id="loader-kampus">
+				<div class="h-[27rem] overflow-auto py-5">
+					<div class="hidden items-center justify-center self-center text-center" id="loader-kampus">
 						<div class="flex items-center justify-center">
 							<i class="fa fa-spinner fa-spin me-2 text-2xl"></i>
 							<span>Loading...</span>
