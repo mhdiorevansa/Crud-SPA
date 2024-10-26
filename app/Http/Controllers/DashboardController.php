@@ -11,11 +11,19 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Yajra\DataTables\Facades\DataTables;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class DashboardController extends Controller
 {
+    use SEOToolsTrait;
     public function index()
     {
+        $this->seo()->setTitle('Dashboard');
+        $this->seo()->setDescription('This is my page description 1');
+        $this->seo()->opengraph()->setUrl('http://current.url.com');
+        $this->seo()->opengraph()->addProperty('type', 'articles');
+        $this->seo()->twitter()->setSite('@mhdiorevansa098');
+        $this->seo()->jsonLd()->setType('Article');
         $data['web'] = ['title' => 'Dashboard'];
         return view('index', $data);
     }

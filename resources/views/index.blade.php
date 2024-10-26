@@ -114,6 +114,7 @@
 				<h1 class="mb-4 text-center text-2xl font-semibold uppercase">
 					data kampus
 				</h1>
+				<input type="text" class="w-full rounded-md border border-slate-200 p-2 shadow-sm placeholder:capitalize focus:outline-none" placeholder="Masukkan nama kampus" id="">
 				<div class="h-[27rem] overflow-auto py-5">
 					<div class="hidden items-center justify-center self-center text-center" id="loader-kampus">
 						<div class="flex items-center justify-center">

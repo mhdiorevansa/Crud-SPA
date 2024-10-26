@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
 class AuthController extends Controller
 {
+    use SEOToolsTrait;
     public function login()
     {
+        $this->seo()->setTitle('Login');
+        $this->seo()->setDescription('This is my page description 1');
+        $this->seo()->opengraph()->setUrl('http://current.url.com');
+        $this->seo()->opengraph()->addProperty('type', 'articles');
+        $this->seo()->twitter()->setSite('@mhdiorevansa098');
+        $this->seo()->jsonLd()->setType('Article');
         $data['web'] = ['title' => 'Login'];
         return view('login', $data);
     }
