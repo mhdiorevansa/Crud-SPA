@@ -10,6 +10,7 @@
         "doctrine/dbal": "^4.1",
         "laravel/framework": "^11.9",
         "laravel/reverb": "^1.0",
+        "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.2",
         "silviolleite/laravelpwa": "^2.0",

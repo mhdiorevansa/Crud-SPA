@@ -2,8 +2,8 @@ import $ from "jquery";
 import Swal from "sweetalert2";
 
 export function login() {
-    const urlAuth = $("#submit-login").data("url-login");
     $("#login-form").on("submit", function (event) {
+        const urlAuth = $("#submit-login").data("url-login");
         event.preventDefault();
         let button = $("#submit-login");
         let icon = button.find("i");
@@ -97,8 +97,8 @@ export function login() {
 }
 
 export function logout() {
-    const urlLogout = $("#logout").data("logout-url");
     $("#logout").on("click", function (event) {
+        const urlLogout = $("#logout").data("logout-url");
         event.preventDefault();
         Swal.fire({
             title: "Apakah kamu yakin?",
@@ -161,7 +161,7 @@ export function logout() {
                     error: function (response) {
                         errorAjaxResponse(response);
                     },
-                }); 
+                });
             }
         });
     });

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\MessageController;
 
 Route::redirect('/', '/dashboard');
@@ -10,6 +11,8 @@ Route::redirect('/', '/dashboard');
 Route::group(['middleware' => 'guest'], function () {
    Route::get('/login', [AuthController::class, 'login'])->name('login');
    Route::post('/authenticating', [AuthController::class, 'authenticating']);
+   Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
+   Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
