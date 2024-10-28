@@ -95,9 +95,8 @@ export function login() {
                     });
                     Toast.fire({
                         icon: "error",
-                        title: "Terlalu banyak request, reload lagi beberapa saat!",
+                        title: "Terlalu banyak request, login lagi beberapa saat!",
                     });
-
                 } else {
                     errorAjaxResponse(response);
                 }
