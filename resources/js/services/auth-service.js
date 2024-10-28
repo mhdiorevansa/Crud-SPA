@@ -81,6 +81,23 @@ export function login() {
                         $("#password").addClass("is-invalid");
                         $("#error-password-login").html(errors.password[0]);
                     }
+                } else if (response.status == 429) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        },
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Terlalu banyak request, reload lagi beberapa saat!",
+                    });
+
                 } else {
                     errorAjaxResponse(response);
                 }
