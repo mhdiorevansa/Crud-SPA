@@ -8,12 +8,12 @@ use App\Http\Controllers\MessageController;
 
 Route::redirect('/', '/dashboard');
 
-Route::group(['middleware' => 'guest'], function () {
-   // throttle untuk rate limiting
-   Route::group(['middleware' => 'throttle:5,1'], function () {
-      Route::get('/login', [AuthController::class, 'login']);
-      Route::post('/authenticating', [AuthController::class, 'authenticating']);
-   });
+// throttle untuk rate limiting
+Route::group(['middleware' => ['guest', 'throttle:5,1']], function () {
+   Route::get('/login', [AuthController::class, 'login'])->name('login');
+   Route::post('/authenticating',
+      [AuthController::class, 'authenticating']
+   );
    Route::get('login/google', [GoogleController::class, 'redirectToGoogle']);
    Route::get('login/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 });
